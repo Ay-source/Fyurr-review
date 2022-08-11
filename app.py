@@ -507,20 +507,21 @@ def create_show_submission():
   form = ShowForm(request.form)
   if form.validate_on_submit():
     try:
-      value = Show(artist_id=form.artist_id.data, venue_id=form.venue_id.data, start_time=form.start_time.data)
-      check = Show.query.filter_by(start_time=form.start_time.data).all()
+      show = Show(artist_id=form.artist_id.data,
+      venue_id=form.venue_id.data,
+      start_time=form.start_time.data
+      )
       """for i in check:
         if (i.venue_id == form.venue_id.data) and (i.artist_id == form.artist_id.data) and (i.start_time == form.start_time.data):
           flash("Show already exists.")
           return render_template('pages/home.html')"""
       # on successful db insert, flash success
       #try_except(value, "Show ")
-      db.session.add(value)
+      db.session.add(show)
       db.session.commit()
-      #flash('Show was successfully listed!')
-      return render_template('pages/home.html')
+      flash('Show was successfully listed!')
       # TODO: on unsuccessful db insert, flash an error instead.
-    except:
+    except Exception as e:
       db.session.rollback()
       # e.g., flash('An error occurred. Show could not be listed.')
       flash("Invalid form. Get id from artist and venue page. Use the given date and time format")
